@@ -175,3 +175,54 @@ Follow these steps to run the full microservices demo:
 - You should see the response from PaymentService (e.g., `Hello`).
 
 --- 
+
+# Load Balancing in This Project
+
+**Yes, load balancing is handled in your current setup!**
+
+## How Load Balancing Works
+- **Spring Cloud Gateway** is configured to use the `lb://` (load balancer) URI scheme for backend services:
+  ```
+  spring.cloud.gateway.routes[0].uri=lb://EXAMPLE-SERVICE
+  ```
+  This tells the gateway to use Spring Cloud LoadBalancer to route requests to any instance of the service registered as `EXAMPLE-SERVICE` in Eureka.
+
+- **Eureka** acts as a service registry. If you run multiple instances of `PaymentService` (or any other service registered as `EXAMPLE-SERVICE`), all of them will be registered with Eureka.
+
+- **Spring Cloud LoadBalancer** (included via your dependencies) will automatically distribute incoming requests from the gateway across all available instances of `EXAMPLE-SERVICE` using a round-robin algorithm by default.
+
+---
+
+## How to See Load Balancing in Action
+
+1. **Start Multiple Instances of PaymentService**
+   - Open multiple terminals.
+   - In each, run `PaymentService` with a different port:
+     ```bash
+     mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
+     mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8082
+     ```
+   - Make sure each instance has the same `spring.application.name=example-service` and points to the same Eureka server.
+
+2. **Check Eureka Dashboard**
+   - Go to [http://localhost:8761](http://localhost:8761)
+   - You should see multiple instances of `EXAMPLE-SERVICE` registered.
+
+3. **Send Multiple Requests to the Gateway**
+   - Use your browser or a tool like `curl` or Postman to hit:
+     ```
+     http://localhost:8080/example/
+     ```
+   - You should see the requests being distributed (load balanced) across your running instances. You can add a unique response per instance to see the difference.
+
+---
+
+| Component         | Role                                 |
+|-------------------|--------------------------------------|
+| Eureka            | Service registry                     |
+| PaymentService    | Registers as `example-service`       |
+| API Gateway       | Uses `lb://EXAMPLE-SERVICE` URI      |
+| Load Balancer     | Distributes requests across instances|
+
+**In short:**
+If you run multiple instances of your backend service, the API Gateway will automatically load balance requests between them using Spring Cloud LoadBalancer and Eureka. 
