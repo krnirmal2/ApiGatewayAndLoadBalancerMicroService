@@ -1,0 +1,3 @@
+Client → API Gateway → Cache Check → [Cache Hit] → Return Cached Response
+                         │
+                         └→ [Cache Miss] → Route to Backend → Cache Response → Return to Client
