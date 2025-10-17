@@ -1,4 +1,13 @@
-// ... existing code ...
+| Component                       | Purpose                                       |
+| ------------------------------- | --------------------------------------------- |
+| **Spring Cloud Gateway MVC**    | Handles routing and filtering of API requests |
+| **Spring Cloud LoadBalancer**   | Distributes requests across service instances |
+| **Eureka Client**               | Enables dynamic service discovery             |
+| **Redis Cache**                 | Stores frequently accessed responses          |
+| **CacheInvalidationFilter**     | Removes stale cache on POST operations        |
+| **Security Starter**            | Centralized authentication in gateway         |
+| **Actuator + Prometheus**       | Observability and monitoring                  |
+| **Java 21 + Spring Boot 3.2.3** | Latest, high-performance stack                |
 
 ### Monitoring & Analytics
 
